@@ -1,0 +1,1 @@
+SCAN_RESULTS_FILE = "scanResults.txt"

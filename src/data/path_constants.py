@@ -1,0 +1,1 @@
+ROOT_TO_SOURCE = "/home/cybershield/SzentrySkope/src/"
