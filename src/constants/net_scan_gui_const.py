@@ -18,6 +18,14 @@ scan_techniques_txt = [
 ]
 
 # Port Range UI
-PRANGE_1 = "Val1"
-PRANGE_2 = "Val2"
-PRANGE_3 = "Val3"
+PRANGE_1 = "PortX"
+PRANGE_2 = "Service"
+PRANGE_3 = "Vulns"
+
+# SERVICE/VERSION DETECTION
+sV = "Service Detection"
+
+# Scan Intensity Constants
+SCAN_1_INT = "Stealth"
+SCAN_2_INT = "Aggression"
+SCAN_3_INT = "Evasion"

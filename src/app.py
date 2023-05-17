@@ -79,11 +79,14 @@ class App(customtkinter.CTk):
         self.cves = CVES(self)
         self.cves.grid_columnconfigure(GRID_COL_0, weight=GRID_WEIGHT_1)
 
+        
             # network_scanner frame/button
         self.sidebar.sidebar_btn_5.configure(command=self.sidebar_btn_5_event)
         self.network_scanner = NetworkScanner(self)
-        self.network_scanner.grid_columnconfigure(GRID_COL_0, weight=GRID_WEIGHT_1)
-
+        self.network_scanner.grid_columnconfigure(GRID_COL_1, weight=GRID_WEIGHT_1)
+        self.network_scanner.grid_columnconfigure((GRID_COL_2, GRID_COL_3), weight=GRID_WEIGHT_0)
+        self.network_scanner.grid_rowconfigure((GRID_COL_0, GRID_COL_1, GRID_COL_2), weight=GRID_WEIGHT_1)
+        
             # app_scanner frame/button
         self.sidebar.sidebar_btn_6.configure(command=self.sidebar_btn_6_event)
         self.app_scanner = AppScanner(self)
