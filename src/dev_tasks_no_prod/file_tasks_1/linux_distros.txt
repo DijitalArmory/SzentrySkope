@@ -1,0 +1,30 @@
+Ubuntu - sudo apt update && sudo apt upgrade
+Debian - sudo apt update && sudo apt upgrade
+Fedora - sudo dnf update
+CentOS - sudo yum update
+Red Hat Enterprise Linux (RHEL) - sudo yum update
+openSUSE - sudo zypper update
+Arch Linux - sudo pacman -Syu
+Linux Mint - sudo apt update && sudo apt upgrade
+Gentoo - sudo emerge --sync && sudo emerge --update --deep --with-bdeps=y @world
+Mageia - sudo dnf update
+Slackware - sudo slackpkg update && sudo slackpkg upgrade-all
+elementary OS - sudo apt update && sudo apt upgrade
+Manjaro - sudo pacman -Syu
+Kali Linux - sudo apt update && sudo apt upgrade
+Zorin OS - sudo apt update && sudo apt upgrade
+Raspbian - sudo apt update && sudo apt upgrade
+Oracle Linux - sudo yum update
+Scientific Linux - sudo yum update
+Alpine Linux - sudo apk update && sudo apk upgrade
+Clear Linux - sudo swupd update
+Tails - Not intended for regular package-based updates.
+Endless OS - sudo ostree admin upgrade
+MX Linux - sudo apt update && sudo apt upgrade
+Antergos - Antergos has been discontinued. Consider using another distribution.
+Solus - sudo eopkg upgrade
+Void Linux - sudo xbps-install -Su
+Armbian - sudo apt update && sudo apt upgrade
+Lubuntu - sudo apt update && sudo apt upgrade
+Peppermint OS - sudo apt update && sudo apt upgrade
+Bodhi Linux - sudo apt update && sudo apt upgrade

@@ -1,7 +1,0 @@
-(-sO) must currently be used alone rather than combined with other scan types.
-
--sL and -sn (skip port scan) are not valid with any other scan types
-
-Warning:  You are not root -- using TCP pingscan rather than ICMP
-
--sL: List Scan - simply list targets to scan <-- must take a list as Input
