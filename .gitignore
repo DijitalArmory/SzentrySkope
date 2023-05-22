@@ -1,3 +1,7 @@
 .vscode/
 /__pycache__
 __pycache__/
+venv/
+/venv
+temp/
+src/dev_tasks_no_prod/file_tasks_1/test
