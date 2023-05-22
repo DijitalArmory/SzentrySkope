@@ -5,9 +5,12 @@ from constants.net_scan_gui_const import scan_techniques_txt
 from gui.frames.subframes.scan_intensity_box import ScanIntensityBox
 from gui.frames.subframes.host_options_box import HostOptionsBox
 from gui.frames.subframes.port_options_box import PortOptionsBox
+from data.net_scan_data import (
+    scan_techniques
+) 
 from constants.constants import (
     CORNER_RADIUS_0, GRID_COL_1, GRID_COL_2, GRID_COL_3, GRID_COL_0, GRID_ROW_3,
-    GRID_WEIGHT_0, GRID_WEIGHT_1, NSEW, PADX_1, SHADE_3, PADY_1, TRANSPARENT
+    GRID_WEIGHT_0, GRID_WEIGHT_1, NSEW, PADX_1, SHADE_3, PADY_1, TRANSPARENT,
 )
 
 class NetworkScanner(customtkinter.CTkFrame):
@@ -18,11 +21,14 @@ class NetworkScanner(customtkinter.CTkFrame):
         self._corner_radius = CORNER_RADIUS_0
         
         # create scrollable checkbox frame
-        self.checked_items = scan_techniques_txt
+        self.checked_items = scan_techniques.keys()
+        self.item_values = scan_techniques.values()
 
-        self.scan_techniques_box = ScanTechniquesBox(self,self.checked_items, command=self.test)
+        self.scan_techniques_box = ScanTechniquesBox(self,self.checked_items, command=self.on_scan_techniques_checked)
        
         self.scan_techniques_box.grid_columnconfigure(0, weight=1)
+
+        self.scan_techniques_box.append_value(self.item_values)
 
         # create vuln_range frame
         self.vuln_range_box = ExclusionsBox(self)
@@ -59,5 +65,9 @@ class NetworkScanner(customtkinter.CTkFrame):
         self.main_button_1.grid(row=GRID_ROW_3, column=GRID_COL_2, padx=(PADX_1, PADX_1), pady=(PADY_1, PADY_1), sticky=NSEW)
         
     
-    def test(self):
-        print("TESTING")
+    def on_scan_techniques_checked(self):
+        for i in self.item_values:
+            print(i)
+                  
+                  
+        
