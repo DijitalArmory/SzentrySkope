@@ -1,3 +1,5 @@
+scan_init = "nmap"
+
 udp_protocols = {
     "UDP" : "-sU"
 }

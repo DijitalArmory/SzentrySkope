@@ -5,6 +5,7 @@ from constants.net_scan_gui_const import scan_techniques_txt
 from gui.frames.subframes.scan_intensity_box import ScanIntensityBox
 from gui.frames.subframes.host_options_box import HostOptionsBox
 from gui.frames.subframes.port_options_box import PortOptionsBox
+from scans.args_handler import ArgsHandler
 from data.net_scan_data import (
     scan_techniques
 ) 
@@ -16,19 +17,17 @@ from constants.constants import (
 class NetworkScanner(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
+
+        self.checkbox_names_list = list(scan_techniques.keys())
+        self.command_args_list = list(scan_techniques.values())
         
         # config style
         self._corner_radius = CORNER_RADIUS_0
         
-        # create scrollable checkbox frame
-        self.checked_items = scan_techniques.keys()
-        self.item_values = scan_techniques.values()
-
-        self.scan_techniques_box = ScanTechniquesBox(self,self.checked_items, command=self.on_scan_techniques_checked)
-       
+        self.checkbox_list = []
+        
+        self.scan_techniques_box = ScanTechniquesBox(self, self.checkbox_list, command=self.on_scan_techniques_checked)
         self.scan_techniques_box.grid_columnconfigure(0, weight=1)
-
-        self.scan_techniques_box.append_value(self.item_values)
 
         # create vuln_range frame
         self.vuln_range_box = ExclusionsBox(self)
@@ -64,10 +63,12 @@ class NetworkScanner(customtkinter.CTkFrame):
         self.main_button_1 = customtkinter.CTkButton(master=self, fg_color=TRANSPARENT, border_width=2, text="Abort Scan Scan", text_color=(SHADE_3, "#DCE4EE"))
         self.main_button_1.grid(row=GRID_ROW_3, column=GRID_COL_2, padx=(PADX_1, PADX_1), pady=(PADY_1, PADY_1), sticky=NSEW)
         
+    def checkbox_click(val):
+        print(val)
     
+    # add the appended arguments list to the scanning args list 
     def on_scan_techniques_checked(self):
-        for i in self.item_values:
-            print(i)
-                  
+        pass
+
                   
         
