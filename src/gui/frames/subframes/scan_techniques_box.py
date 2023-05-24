@@ -10,18 +10,21 @@ from data.net_scan_data import (
 ) 
 
 class ScanTechniquesBox(customtkinter.CTkScrollableFrame):
-    def __init__(self, master, args_list, command=None, **kwargs):
+    def __init__(self, master, args_list=None, checkbox_list=None, command=None, **kwargs):
         super().__init__(master, **kwargs)
+        
         self.command = command
+        self.names_list = list(scan_techniques.keys())
+        self.values_list = list(scan_techniques.values())
+        self.checkbox_list = checkbox_list # gui - displays keys()
+        self.args_list = args_list if args_list is not None else [] 
+        
+
+        # style config 
         self.grid(row=1, column=2, padx=(20, 0), pady=(20, 0))
 
-        self.item_list = list(scan_techniques.keys())
-        self.other_list = list(scan_techniques.values())
-        self.checkbox_list = [] # gui - displays keys()
-        self.args_list = args_list  # command args list 
-
-        for i, item in enumerate(self.item_list):
-            self.add_item(item, self.other_list[i])
+        for i, item in enumerate(self.names_list):
+            self.add_item(item, self.values_list[i])
 
     def add_item(self, item, other_value):
         var = tkinter.StringVar()
@@ -32,30 +35,27 @@ class ScanTechniquesBox(customtkinter.CTkScrollableFrame):
         self.checkbox.grid(row=len(self.checkbox_list), column=0, pady=(0, 10), sticky='w')
         self.checkbox_list.append(self.checkbox)
 
-    
-    # load scan technique args
     def checkbox_command(self, value):
-        on_value = self.checkbox._onvalue
-        off_value = self.checkbox._offvalue
-        index = self.other_list.index(value)
-        xindex = self.other_list[index]
-        if on_value == 1:
-            if xindex not in self.args_list:
+        if self.command is not None:
+            on_value = self.checkbox._onvalue
+            off_value = self.checkbox._offvalue
+            index = self.values_list.index(value)
+            xindex = self.values_list[index]
+
+            if on_value == 1 and xindex not in self.args_list:
                 self.args_list.append(xindex)
-                print("LIST ", self.args_list, "VALUE ", value)
-                return value
-                
-        elif off_value == 0:  # Modified condition to check if off_value is true
-            if xindex in self.args_list:
+            elif off_value == 0 and xindex in self.args_list:
                 self.args_list.remove(xindex)
-                print("LIST ", self.args_list, "VALUE ", value)
-                return value
 
+            print("Updated args_list:", self.args_list)
+            self.update_checkbox_args_list()
+            self.command()  # Call the command to update ArgsHandler
 
+    def update_checkbox_args_list(self):
+        self.master.checkbox_args_list = self.args_list
+        print("MASTER ARGS LIST in ScanTechniquesBox OBJ:", self.master.checkbox_args_list)
+       
 
 
 
     
-
-
-
