@@ -3,13 +3,11 @@ import netifaces
 import ipaddress
 
 
+def host_name(self):
+    return socket.gethostname() # localhost
 
-hostname = socket.gethostname()
 
 
-def get_hostname(self):
-    # Get the hostname of the current machine
-    hostname = socket.gethostname()
 
 def get_ip_addr():
     # Get the IP address associated with the hostname

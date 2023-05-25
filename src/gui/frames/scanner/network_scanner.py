@@ -1,7 +1,7 @@
 import customtkinter
 from gui.frames.subframes.scan_techniques_box import ScanTechniquesBox
 from gui.frames.subframes.exclusions_box import ExclusionsBox
-from constants.net_scan_gui_const import scan_techniques_txt
+#from constants.net_scan_gui_const import scan_techniques_txt
 from gui.frames.subframes.scan_intensity_box import ScanIntensityBox
 from gui.frames.subframes.host_options_box import HostOptionsBox
 from gui.frames.subframes.port_options_box import PortOptionsBox
@@ -9,6 +9,9 @@ from scans.args_handler import ArgsHandler
 from constants.constants import (
     CORNER_RADIUS_0, GRID_COL_1, GRID_COL_2, GRID_COL_3, GRID_COL_0, GRID_ROW_3,
     GRID_WEIGHT_0, GRID_WEIGHT_1, NSEW, PADX_1, SHADE_3, PADY_1, TRANSPARENT,
+)
+from constants.net_scan_commands import (
+    SCAN_INIT
 )
 
 
@@ -18,7 +21,7 @@ from constants.constants import (
 class NetworkScanner(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
-        
+
         # config style
         self._corner_radius = CORNER_RADIUS_0
         
@@ -26,8 +29,10 @@ class NetworkScanner(customtkinter.CTkFrame):
         #self.checkbox_args_list = [] # onvalue checkbox args (when-checked)
         #self.args_list = [] # receives the args_list of self.checkbox_args_list
         self.checkbox_args_list = [] 
+        self.loaded_args = [] # this is just placeholder for future checkbox_args_list appension
+        self.port_button_args_list = []
 
-        self.scan_techniques_box = ScanTechniquesBox(self, args_list=self.checkbox_args_list, checkbox_list=self.checkbox_list, command=self.update_args_handler)
+        self.scan_techniques_box = ScanTechniquesBox(self, args_list=self.checkbox_args_list, checkbox_list=self.checkbox_list, command=self.execute_non_gui_code)
         self.scan_techniques_box.grid_columnconfigure(0, weight=1)
 
         
@@ -46,8 +51,7 @@ class NetworkScanner(customtkinter.CTkFrame):
         self.host_options_box = HostOptionsBox(self)
     
         # create port_range box
-        self.port_range_box = PortOptionsBox(self)
-
+        self.port_options_box = PortOptionsBox(self, self, args_list=self.port_button_args_list)
 
         # create 'Begin Scan' button
         self.main_button_1 = customtkinter.CTkButton(master=self, fg_color=TRANSPARENT, border_width=2, text="Start Scan", text_color=(SHADE_3, "#DCE4EE"))
@@ -66,16 +70,19 @@ class NetworkScanner(customtkinter.CTkFrame):
         # create 'Begin Scan' button
         self.main_button_1 = customtkinter.CTkButton(master=self, fg_color=TRANSPARENT, border_width=2, text="Abort Scan Scan", text_color=(SHADE_3, "#DCE4EE"))
         self.main_button_1.grid(row=GRID_ROW_3, column=GRID_COL_2, padx=(PADX_1, PADX_1), pady=(PADY_1, PADY_1), sticky=NSEW)
+
+        # handle checbox args phase1selected_value
         
-        #self.args_handler = ArgsHandler(args_list=self.checkbox_args_list)
+        self.checkbox_args_handler = ArgsHandler(self.checkbox_args_list, self.loaded_args)
+        self.checkbox_args_handler.register_gui_callback(self.on_gui_callback1, self.on_gui_callback2)
 
-    def update_args_handler(self):
-        print("Updated checkbox_args_list in NetworkScanner:", self.checkbox_args_list)
+    def execute_non_gui_code(self):
+        self.checkbox_args_handler.non_gui_method1() # handle checbox args phase2
+        self.checkbox_args_handler.non_gui_method2()
+        print("Executing non-gui code")
 
-        #self.after(0, self.perform_args_update)
-    '''  
-    def perform_args_update(self):
-        print("Updated checkbox_args_list in NetworkScanner:", self.checkbox_args_list)
-    
-        self.args_handler.update_checkbox_args_list(self.checkbox_args_list)
-    ''' 
+    def on_gui_callback1(self, data):
+        data = self.checkbox_args_list # handle checbox args phase3
+        print("Received callback1 signal from non-GUI code:", data)
+
+

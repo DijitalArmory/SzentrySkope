@@ -31,6 +31,8 @@ scan_techniques = {
     "DNS Resolve - Host"            : "-R"
 }
 
+
+
 scan_service_detection = {
     "Service Detection"             : "-sV", 
     "Operating System Detection"    : "-O",
@@ -42,6 +44,12 @@ scan_scripts = {
     "script="                       : "-sC", 
     "script_trace"                  : "--script-trace",
     "script_db_update"              : "--script-updatedb"
+}
+
+scan_ports = {
+    "First 1000"                    : "-p 1000",
+    "All Ports"                     : "-p-", 
+    "Custom"                        : None
 }
 
 scan_technique_options_gui = list(scan_techniques.keys())

@@ -1,6 +1,6 @@
 import subprocess
 import os
-from info.net_info import (get_ip_addr, get_default_gateway, get_network_addr)
+from data.net_info import (get_ip_addr, get_default_gateway, get_network_addr)
 #from data.net_scan_constants import *
 from data.path_constants import ROOT_TO_SOURCE
 from data.file_constants import SCAN_RESULTS_FILE
