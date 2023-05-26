@@ -51,7 +51,7 @@ class NetworkScanner(customtkinter.CTkFrame):
         self.host_options_box = HostOptionsBox(self)
     
         # create port_range box
-        self.port_options_box = PortOptionsBox(self, self, args_list=self.port_button_args_list)
+        self.port_options_box = PortOptionsBox(self)
 
         # create 'Begin Scan' button
         self.main_button_1 = customtkinter.CTkButton(master=self, fg_color=TRANSPARENT, border_width=2, text="Start Scan", text_color=(SHADE_3, "#DCE4EE"))
@@ -84,5 +84,12 @@ class NetworkScanner(customtkinter.CTkFrame):
     def on_gui_callback1(self, data):
         data = self.checkbox_args_list # handle checbox args phase3
         print("Received callback1 signal from non-GUI code:", data)
+
+    def on_gui_callback2(self, data):
+        pass
+
+    def test(self):
+        print("TESTING")
+
 
 
