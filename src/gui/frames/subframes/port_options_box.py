@@ -1,10 +1,14 @@
 import customtkinter
 import tkinter
+import sys
+
 from constants.constants import (
     CORNER_RADIUS_0, GRID_ROW_2, GRID_COL_2, PADY_1, PADX_1, NSEW, PADX_2, 
     PADY_2, PADX_1, N
 )
 from data.net_scan_data import scan_ports
+sys.path.append('/home/cybershield/SzentrySkope/src/gui/frames/')
+import err.err_msg
 
 class PortOptionsBox(customtkinter.CTkFrame):
     def __init__(self, master):
@@ -29,47 +33,66 @@ class PortOptionsBox(customtkinter.CTkFrame):
 
         # init args
         self.args_list = []
+        self.toplevel_window = None # err msg handler
+        self.entry_start = None
+        self.entry_end = None
+        #self.submit_button = None
+        self.previous_selection = ""
+        self.created_widgets  = []
         
-
-        self.radio_var = tkinter.IntVar(value=0)
+        # set default selected value for radio buttons
+        self.radio_var = tkinter.StringVar(value=self.first_value)
 
         self.label_radio_group = customtkinter.CTkLabel(self,  text="Port Range")
         self.label_radio_group.grid(row=0, column=2, columnspan=1, padx=PADX_2, pady=PADY_2, sticky="")
-        self.radio_button_1 = customtkinter.CTkRadioButton(self, text=self.first_key, variable=self.radio_var, value=0, command=self.radio_button_command)
+        self.radio_button_1 = customtkinter.CTkRadioButton(self, text=self.first_key, variable=self.radio_var, value=self.first_value, command=self.radio_button_command)
         self.radio_button_1.grid(row=1, column=2, pady=10, padx=20, sticky="n",columnspan=1)
-        self.radio_button_2 = customtkinter.CTkRadioButton(self, text=self.second_key, variable=self.radio_var, value=1,command=self.radio_button_command)
+        self.radio_button_2 = customtkinter.CTkRadioButton(self, text=self.second_key, variable=self.radio_var, value=self.second_value, command=self.radio_button_command)
         self.radio_button_2.grid(row=GRID_ROW_2, column=GRID_COL_2, pady=PADY_2, padx=PADX_1, sticky=N,columnspan=1)
-        self.radio_button_3 = customtkinter.CTkRadioButton(self, text=self.third_key, variable=self.radio_var, value=2,command=self.create_entry_fields)
+        self.radio_button_3 = customtkinter.CTkRadioButton(self, text=self.third_key, variable=self.radio_var, value=self.third_value, command=self.create_entry_fields)
         self.radio_button_3.grid(row=3, column=2, pady=10, padx=20, sticky="n", columnspan=1)
 
 
     def radio_button_command(self):
-        self.selected_value = self.radio_var.get()  # Get the selected radio button value
-        
+        self.current_selection = self.radio_var.get()  # Get the selected radio button value
+        if self.current_selection != self.previous_selection:
 
-        
-        if self.selected_value == 0:
-            self.args_list = [self.first_value]  # Example value for the first radio button
-            self.args_list.append(self.first_value)
+            if self.current_selection == self.first_value:
+                self.args_list = [self.first_value]
+                print(self.first_value, " type ", type(self.first_value))
+                     
+                
+            elif self.current_selection == self.second_value:
+                self.args_list = [self.second_value]
+                print(self.second_value, " type ", type(self.second_value))
+
+            elif self.current_selection == self.third_value:
+                print(self.third_value, " type ", type(self.third_value))
             
-        elif self.selected_value == 1:
-            self.args_list = [self.second_value]  # Example value for the second radio button
-            self.args_list.append(self.second_value)
 
-        elif self.selected_value == 2:
-            #self.args_list.append(self.third_value)
-            self.create_entry_fields()
-        
-        if self.selected_value != 2:
+            self.previous_selection = self.current_selection
+        else: 
+                self.remove_entry_fields()
+
+        print(self.args_list)
+
+
+
+    def remove_entry_fields(self):
+        if  self.entry_start is not None:
             self.entry_start.destroy()
+            self.entry_start = None
+
+        if  self.entry_end is not None:
             self.entry_end.destroy()
-        
-        
-        print(self.args_list)  # Print the updated list for testing purposes
+            self.entry_end = None
 
+        if self.submit_button is not None:
+           self.submit_button.destroy()
+           self.submit_button= None
 
+    
     def create_entry_fields(self):
-        # Create StringVar variables
         self.start_value = tkinter.StringVar()
         self.end_value = tkinter.StringVar()
         
@@ -77,26 +100,7 @@ class PortOptionsBox(customtkinter.CTkFrame):
         self.entry_start.grid(row=4, column=2, columnspan=1, padx=(10, 10), pady=(10, 10), sticky="nsew")
         self.entry_end = customtkinter.CTkEntry(self, placeholder_text="To...", textvariable=self.end_value)
         self.entry_end.grid(row=5, column=2, columnspan=1, padx=(10, 10), pady=(10, 10), sticky="nsew")
-        self.submit_button = customtkinter.CTkButton(self, text="submit", command=self.get_entry_values) 
+        self.submit_button = customtkinter.CTkButton(self, text="submit", command=None) 
         self.submit_button.grid(row=6, column=2, columnspan=1, padx=(10, 10), pady=(10, 10), sticky="nsew")
 
 
-    def get_entry_values(self):
-        if self.start_value.get().isdigit() and self.end_value.get().isdigit():
-            self.start_value = int(self.entry_start.get())
-            self.end_value = int(self.entry_end.get())
-            self.third_value = f"-p {str(self.start_value)}-{str(self.end_value)}"
-            self.args_list.append(self.third_value)
-        else: 
-            print("not digits")
-
-        print(self.start_value)
-        print(self.end_value)
-        print(self.third_key, self.third_value)
-        print("args_list ", self.args_list)
-
-        '''
-        TODO LEFT OFF
-        Somehow get self.args_list to a list in network scanner 
-        and make the sure that list is updated along w/args_list
-        '''
