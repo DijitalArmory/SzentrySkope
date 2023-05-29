@@ -36,7 +36,7 @@ class PortOptionsBox(customtkinter.CTkFrame):
         self.toplevel_window = None # err msg handler
         self.entry_start = None
         self.entry_end = None
-        #self.submit_button = None
+        self.submit_button = None
         self.previous_selection = ""
         self.created_widgets  = []
         
@@ -49,8 +49,18 @@ class PortOptionsBox(customtkinter.CTkFrame):
         self.radio_button_1.grid(row=1, column=2, pady=10, padx=20, sticky="n",columnspan=1)
         self.radio_button_2 = customtkinter.CTkRadioButton(self, text=self.second_key, variable=self.radio_var, value=self.second_value, command=self.radio_button_command)
         self.radio_button_2.grid(row=GRID_ROW_2, column=GRID_COL_2, pady=PADY_2, padx=PADX_1, sticky=N,columnspan=1)
-        self.radio_button_3 = customtkinter.CTkRadioButton(self, text=self.third_key, variable=self.radio_var, value=self.third_value, command=self.create_entry_fields)
+        self.radio_button_3 = customtkinter.CTkRadioButton(self, text=self.third_key, variable=self.radio_var, value=self.third_value, command=self.enable_entry_fields)
         self.radio_button_3.grid(row=3, column=2, pady=10, padx=20, sticky="n", columnspan=1)
+
+        self.start_value = tkinter.StringVar()
+        self.end_value = tkinter.StringVar()
+
+        self.entry_start = customtkinter.CTkEntry(self, placeholder_text="From...", state = tkinter.DISABLED, textvariable=self.start_value)
+        self.entry_start.grid(row=4, column=2, columnspan=1, padx=(10, 10), pady=(10, 10), sticky="nsew")
+        self.entry_end = customtkinter.CTkEntry(self, placeholder_text="To...", state = tkinter.DISABLED, textvariable=self.end_value)
+        self.entry_end.grid(row=5, column=2, columnspan=1, padx=(10, 10), pady=(10, 10), sticky="nsew")
+        self.submit_button = customtkinter.CTkButton(self, text="submit", state = tkinter.DISABLED, command=None) 
+        self.submit_button.grid(row=6, column=2, columnspan=1, padx=(10, 10), pady=(10, 10), sticky="nsew")
 
 
     def radio_button_command(self):
@@ -72,6 +82,7 @@ class PortOptionsBox(customtkinter.CTkFrame):
 
             self.previous_selection = self.current_selection
         else: 
+            if self.current_selection != "Option 3":
                 self.remove_entry_fields()
 
         print(self.args_list)
@@ -79,6 +90,7 @@ class PortOptionsBox(customtkinter.CTkFrame):
 
 
     def remove_entry_fields(self):
+        
         if  self.entry_start is not None:
             self.entry_start.destroy()
             self.entry_start = None
@@ -92,7 +104,7 @@ class PortOptionsBox(customtkinter.CTkFrame):
            self.submit_button= None
 
     
-    def create_entry_fields(self):
+    def enable_entry_fields(self):
         self.start_value = tkinter.StringVar()
         self.end_value = tkinter.StringVar()
         
