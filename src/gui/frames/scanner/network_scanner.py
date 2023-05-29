@@ -28,10 +28,11 @@ class NetworkScanner(customtkinter.CTkFrame):
         self.checkbox_list = [] # gui checkbox list
         #self.checkbox_args_list = [] # onvalue checkbox args (when-checked)
         #self.args_list = [] # receives the args_list of self.checkbox_args_list
-        self.checkbox_args_list = [] 
+         
         self.loaded_args = [] # this is just placeholder for future checkbox_args_list appension
-        self.port_button_args_list = []
+        
 
+        self.checkbox_args_list = []
         self.scan_techniques_box = ScanTechniquesBox(self, args_list=self.checkbox_args_list, checkbox_list=self.checkbox_list, command=self.execute_non_gui_code)
         self.scan_techniques_box.grid_columnconfigure(0, weight=1)
 
@@ -51,7 +52,8 @@ class NetworkScanner(customtkinter.CTkFrame):
         self.host_options_box = HostOptionsBox(self)
     
         # create port_range box
-        self.port_options_box = PortOptionsBox(self)
+        self.port_args_list = []
+        self.port_options_box = PortOptionsBox(self, args_list=self.port_args_list, command=self.on_gui_callback2)
 
         # create 'Begin Scan' button
         self.main_button_1 = customtkinter.CTkButton(master=self, fg_color=TRANSPARENT, border_width=2, text="Start Scan", text_color=(SHADE_3, "#DCE4EE"))
@@ -72,24 +74,25 @@ class NetworkScanner(customtkinter.CTkFrame):
         self.main_button_1.grid(row=GRID_ROW_3, column=GRID_COL_2, padx=(PADX_1, PADX_1), pady=(PADY_1, PADY_1), sticky=NSEW)
 
         # handle checbox args phase1selected_value
-        
-        self.checkbox_args_handler = ArgsHandler(self.checkbox_args_list, self.loaded_args)
-        self.checkbox_args_handler.register_gui_callback(self.on_gui_callback1, self.on_gui_callback2)
+        self.checkbox_args_handler = ArgsHandler(self.checkbox_args_list)
+        self.checkbox_args_handler.register_gui_callback(self.on_gui_callback)
+
+        self.port_args_handler = ArgsHandler(self.port_args_list)
+        self.port_args_handler.register_gui_callback(self.on_gui_callback2)
 
     def execute_non_gui_code(self):
-        self.checkbox_args_handler.non_gui_method1() # handle checbox args phase2
-        self.checkbox_args_handler.non_gui_method2()
+        self.checkbox_args_handler.non_gui_method() # handle checbox args phase2
+        
         print("Executing non-gui code")
 
-    def on_gui_callback1(self, data):
+    def on_gui_callback(self, data):
         data = self.checkbox_args_list # handle checbox args phase3
         print("Received callback1 signal from non-GUI code:", data)
 
     def on_gui_callback2(self, data):
-        pass
+        self.port_args_list = data
+        print("Received callback2 signal from non-GUI code:", data)
 
-    def test(self):
-        print("TESTING")
-
+  
 
 

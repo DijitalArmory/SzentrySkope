@@ -8,10 +8,10 @@ from constants.constants import (
 )
 from data.net_scan_data import scan_ports
 sys.path.append('/home/cybershield/SzentrySkope/src/gui/frames/')
-import err.err_msg
+from err.err_msg import ErrMsg
 
 class PortOptionsBox(customtkinter.CTkFrame):
-    def __init__(self, master):
+    def __init__(self, master, args_list=None, command=None):
         super().__init__(master)
 
         self.grid(row=1, column=3, padx=(PADX_1, 20), pady=(PADY_1, 0), sticky=NSEW)
@@ -25,6 +25,8 @@ class PortOptionsBox(customtkinter.CTkFrame):
         self.kp_1 = self.port_opt_len - 2
         self.kp_2 = self.port_opt_len - 1
 
+        self.command = command
+        self.args_list = args_list if args_list is not None else []
         self.first_key, self.first_value = list(scan_ports.items())[self.kp_0]
         self.second_key, self.second_value = list(scan_ports.items())[self.kp_1]
         self.third_key, self.third_value = list(scan_ports.items())[self.kp_2]
@@ -32,13 +34,11 @@ class PortOptionsBox(customtkinter.CTkFrame):
         
 
         # init args
-        self.args_list = []
+       
         self.toplevel_window = None # err msg handler
         self.entry_start = None
         self.entry_end = None
-        #self.submit_button = None
         self.previous_selection = ""
-        self.created_widgets  = []
         
         # set default selected value for radio buttons
         self.radio_var = tkinter.StringVar(value=self.first_value)
@@ -51,7 +51,7 @@ class PortOptionsBox(customtkinter.CTkFrame):
         self.radio_button_2 = customtkinter.CTkRadioButton(self, text=self.second_key, variable=self.radio_var, value=self.second_value, command=self.radio_button_command)
         self.radio_button_2.grid(row=GRID_ROW_2, column=GRID_COL_2, pady=PADY_2, padx=PADX_1, sticky=N, columnspan=1)
         
-        self.switch = customtkinter.CTkSwitch(self, text=self.third_key, variable=self.switch_var, onvalue="on", offvalue="off", command=self.switch_event)
+        self.switch = customtkinter.CTkSwitch(self, text=self.third_key + " Off", variable=self.switch_var, onvalue="on", offvalue="off", command=self.switch_event)
         self.switch.grid(row=3, column=2, pady=PADY_2, padx=PADX_1, sticky="n", columnspan=1)
 
         
@@ -63,7 +63,7 @@ class PortOptionsBox(customtkinter.CTkFrame):
         self.entry_start.grid(row=4, column=2, columnspan=1, padx=(10, 10), pady=(10, 10), sticky="nsew")
         self.entry_end = customtkinter.CTkEntry(self, placeholder_text="To...", textvariable=self.end_value)
         self.entry_end.grid(row=5, column=2, columnspan=1, padx=(10, 10), pady=(10, 10), sticky="nsew")
-        self.submit_button = customtkinter.CTkButton(self, text="submit", command=self.radio_button_command) 
+        self.submit_button = customtkinter.CTkButton(self, text="submit", command=self.submit_button_event) 
         self.submit_button.grid(row=6, column=2, columnspan=1, padx=(10, 10), pady=(10, 10), sticky="nsew")
 
         self.entry_start.configure(state=tkinter.DISABLED)
@@ -74,13 +74,26 @@ class PortOptionsBox(customtkinter.CTkFrame):
 
         
     def radio_button_command(self):
-        pass
+        self.current_selection = self.radio_var.get()
+        if self.current_selection == self.first_value:
+            self.args_list = [self.first_value]
+            print(self.args_list)
+            self.command(self.args_list)
+                     
+                
+        elif self.current_selection == self.second_value:
+            self.args_list = [self.second_value]
+            print(self.args_list)
+            self.command(self.args_list)
+        
+        self.previous_selection = self.current_selection
 
     def switch_event(self):
         self.switch_state = self.switch_var.get()
         
         if self.switch_state == "on":
             # Disable radio buttons
+            self.switch.configure(text=self.third_key + " On")
             self.radio_button_1.configure(state=tkinter.DISABLED)
             self.radio_button_2.configure(state=tkinter.DISABLED)
 
@@ -90,6 +103,7 @@ class PortOptionsBox(customtkinter.CTkFrame):
             self.submit_button.configure(state=tkinter.NORMAL)
         else:
             # Enable radio buttons
+            self.switch.configure(text=self.third_key + " Off")
             self.radio_button_1.configure(state=tkinter.NORMAL)
             self.radio_button_2.configure(state=tkinter.NORMAL)
 
@@ -98,5 +112,38 @@ class PortOptionsBox(customtkinter.CTkFrame):
             self.entry_end.configure(state=tkinter.DISABLED)
             self.submit_button.configure(state=tkinter.DISABLED)
 
-
+    def submit_button_event(self):
+        self.start_value = self.start_value.get()
+        self.end_value = self.end_value.get()
         
+        try:
+            self.start_value = int( self.start_value)
+            self.end_value = int( self.end_value)
+            
+            if 1 <= self.start_value <= 65535 and 1 <=  self.end_value <= 65535 and  self.start_value <  self.end_value:
+                self.start_value =  self.start_value
+                self.end_value =  self.end_value
+                # Use the start_value and end_value as needed
+                print("Start value:", self.start_value)
+                print("End value:", self.end_value)
+                self.args_list = [f"-p {str(self.start_value)}-{str(self.end_value)}"]
+                print(self.args_list)
+                self.command(self.args_list)
+            else:
+                # error message
+               
+                self.err_msg1 = ErrMsg(message="Invalid input values. Please enter integers between 1 and 65535, with the start value less than the end value.")              
+                #self.err_msg1.show_err()
+                
+        except ValueError as e:
+            # error message
+            self.err_msg2 = ErrMsg(message="Invalid input values. Please enter integers between 1 and 65535.")
+            #()
+            
+        
+        
+    
+    
+
+
+         

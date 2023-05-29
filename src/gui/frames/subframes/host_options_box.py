@@ -24,3 +24,14 @@ class HostOptionsBox(customtkinter.CTkFrame):
         self.radio_button_2.grid(row=GRID_ROW_2, column=GRID_COL_2, pady=PADY_2, padx=PADX_1, sticky=N)
         self.radio_button_3 = customtkinter.CTkRadioButton(self, text="Manual", variable=self.radio_var, value=2)
         self.radio_button_3.grid(row=3, column=2, pady=10, padx=20, sticky="n")
+
+        self.entry_start = customtkinter.CTkEntry(self, placeholder_text="From...", textvariable=None)
+        self.entry_start.grid(row=4, column=2, columnspan=1, padx=(10, 10), pady=(10, 10), sticky="nsew")
+        self.entry_end = customtkinter.CTkEntry(self, placeholder_text="To...", textvariable=None)
+        self.entry_end.grid(row=5, column=2, columnspan=1, padx=(10, 10), pady=(10, 10), sticky="nsew")
+        self.submit_button = customtkinter.CTkButton(self, text="submit", command=None) 
+        self.submit_button.grid(row=6, column=2, columnspan=1, padx=(10, 10), pady=(10, 10), sticky="nsew")
+
+        self.entry_start.configure(state=tkinter.DISABLED)
+        self.entry_end.configure(state=tkinter.DISABLED)
+        self.submit_button.configure(state=tkinter.DISABLED)
