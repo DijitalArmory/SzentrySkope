@@ -1,26 +1,29 @@
 import customtkinter
+import tkinter as tk
 from constants.constants import (
     PADY_1, NSEW, PADX_1
 )
 
-class ErrMsgWindow(customtkinter.CTkToplevel):
-    def __init__(self, name=None, msg=None, *args, **kwargs):
+class ErrMsg(customtkinter.CTkToplevel):
+    def __init__(self, message="An Error Occurred", main_window=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.geometry("400x300")
+        self.geometry("800x200")
 
-        self.grid(self, row=1, column=3, padx=(PADX_1, 20), pady=(PADY_1, 0), sticky=NSEW)
+        self.main_window = main_window  # Store a reference to the main window
 
-        self.name = msg = msg
-
-        self.label = customtkinter.CTkLabel(self)
-        self.label.configure(title=self.name, text=self.msg)
+        self.msg = message
+        self.label = customtkinter.CTkLabel(self, bg_color="red", font=("Arial", 16, "bold"), text=self.msg)
         self.label.pack(padx=20, pady=20)
 
-    
-    def open_err_msg_window(self, name, msg):
-        self.name = name
-        self.msg = msg
-        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
-            self.toplevel_window = ErrMsgWindow(self)  # create window if its None or destroyed
-        else:
-            self.toplevel_window.focus()  # if window exists focus it
+        self.protocol("WM_DELETE_WINDOW", self.on_close)  # Handle window close event
+
+        self.close_button = tk.Button(self, text="Close", command=self.on_close)
+        self.close_button.pack(pady=10)
+
+    def on_close(self):
+        
+        self.destroy()  # Destroy the error message window
+
+
+
+

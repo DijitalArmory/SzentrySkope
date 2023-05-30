@@ -102,6 +102,7 @@ class PortOptionsBox(customtkinter.CTkFrame):
             self.entry_start.configure(state=tkinter.NORMAL)
             self.entry_end.configure(state=tkinter.NORMAL)
             self.submit_button.configure(state=tkinter.NORMAL)
+            print("args_list-> ", self.args_list)
         else:
             # Enable radio buttons
             self.switch.configure(text=self.third_key + " Off")
@@ -112,7 +113,7 @@ class PortOptionsBox(customtkinter.CTkFrame):
             self.entry_start.configure(state=tkinter.DISABLED)
             self.entry_end.configure(state=tkinter.DISABLED)
             self.submit_button.configure(state=tkinter.DISABLED)
-
+            print("args_list-> ", self.args_list)
 
     def submit_button_event(self):
         self.start_input = self.start_value.get()
