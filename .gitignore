@@ -1,9 +1,6 @@
 .vscode/
-/__pycache__
-__pycache__/
-*__pycache__/
-/__pycache*
-venv/
-/venv
-temp/
-src/dev_tasks_no_prod/file_tasks_1/test
+*__pycache__/*
+*/__pycache__*
+*venv*
+*temp*
+src/dev_tasks_no_prod/file_tasks_1/*

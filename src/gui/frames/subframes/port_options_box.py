@@ -1,6 +1,7 @@
 import customtkinter
 import tkinter
 import sys
+import traceback
 
 from constants.constants import (
     CORNER_RADIUS_0, GRID_ROW_2, GRID_COL_2, PADY_1, PADX_1, NSEW, PADX_2, 
@@ -112,38 +113,53 @@ class PortOptionsBox(customtkinter.CTkFrame):
             self.entry_end.configure(state=tkinter.DISABLED)
             self.submit_button.configure(state=tkinter.DISABLED)
 
+
     def submit_button_event(self):
-        self.start_value = self.start_value.get()
-        self.end_value = self.end_value.get()
+        self.start_input = self.start_value.get()
+        self.end_input = self.end_value.get()
         
         try:
-            self.start_value = int( self.start_value)
-            self.end_value = int( self.end_value)
+            self.start_value = int(self.start_input)
+            self.end_value = int(self.end_input)
             
-            if 1 <= self.start_value <= 65535 and 1 <=  self.end_value <= 65535 and  self.start_value <  self.end_value:
-                self.start_value =  self.start_value
-                self.end_value =  self.end_value
+            if 1 <= self.start_value <= 65535 and 1 <= self.end_value <= 65535 and self.start_value < self.end_value:
+                self.start_value = self.start_value
+                self.end_value = self.end_value
                 # Use the start_value and end_value as needed
                 print("Start value:", self.start_value)
                 print("End value:", self.end_value)
                 self.args_list = [f"-p {str(self.start_value)}-{str(self.end_value)}"]
                 print(self.args_list)
                 self.command(self.args_list)
-            else:
-                # error message
-               
-                self.err_msg1 = ErrMsg(message="Invalid input values. Please enter integers between 1 and 65535, with the start value less than the end value.")              
-                #self.err_msg1.show_err()
-                
-        except ValueError as e:
-            # error message
-            self.err_msg2 = ErrMsg(message="Invalid input values. Please enter integers between 1 and 65535.")
-            #()
+                self.reset_instance()
             
+            else:
+                self.err1 = ErrMsg(message="Invalid input values. Please enter integers between 1 and 65535, with the start value less than the end value.\nPort settings being reset back to default settings")
+                self.reset_instance()  # Reset instance on error
+
+        except ValueError as e:
+            self.err2 = ErrMsg(message="Invalid input values. No characters Allowed. Only integers between 1-65535\nPort settings being reset back to default settings")
+            self.reset_instance()  # Reset instance on error
+        except Exception as e:
+            print("An error occurred:", str(e))
+            traceback.print_exc()  # Print the traceback for debugging
+            self.reset_instance()  # Reset instance on error
+
         
-        
-    
+
     
 
+    def reset_instance(self):
+        # Reset instance variables to their initial values
+        self.radio_var.set(self.first_value)
+        self.switch_var.set("off")
+        self.entry_start.delete(0, tkinter.END)
+        self.entry_end.delete(0, tkinter.END)
+        self.switch_event()  # Reset switch state
+        self.radio_button_command()  # Trigger radio button command
 
-         
+
+    
+    
+    
+        
