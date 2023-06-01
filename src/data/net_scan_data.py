@@ -1,8 +1,15 @@
+from data.ifaces import ifaces
+from ops.net.get_ip_info import (
+    ip_data, get_iface, get_ip6_mask, get_localhost_ip
+)
+
 scan_init = "nmap"
+#########################################################################################
 
 udp_protocols = {
     "UDP" : "-sU"
 }
+#########################################################################################
 
 scan_techniques = {
     "TCP SYN - Techinique"          : "-sS", 
@@ -31,27 +38,58 @@ scan_techniques = {
     "DNS Resolve - Host"            : "-R"
 }
 
+scan_technique_options_gui = list(scan_techniques.keys())
 
+scan_technique_options = list(scan_techniques.values())
+#########################################################################################
 
 scan_service_detection = {
     "Service Detection"             : "-sV", 
     "Operating System Detection"    : "-O",
     "Service and OS Detection"      : "-A"
 }
-
+#########################################################################################
 
 scan_scripts = {
     "script="                       : "-sC", 
     "script_trace"                  : "--script-trace",
     "script_db_update"              : "--script-updatedb"
 }
+#########################################################################################
 
 scan_ports = {
     "First 1000"                    : "-p 1000",
     "All Ports"                     : "-p-", 
     "Custom"                        : None
 }
+#########################################################################################
 
-scan_technique_options_gui = list(scan_techniques.keys())
+ipv4_info = {
+    "Localhost"                     : get_localhost_ip, 
+    "IPv4 Address"                  : ip_data,
+    "IPv6 Netmask"                  : ip_data,
+    "IPv4 Broadcast"                : ip_data,
+}
 
-scan_technique_options = list(scan_techniques.values())
+ipv4_info_keys = list(ipv4_info.keys())
+ipv4_info_values = list(ipv4_info.values())
+#########################################################################################
+
+ipv6_info = {
+    "IPv6 Address"                  : ip_data,
+    "IPv6 Netmask"                  : get_ip6_mask,
+}
+
+ipv6_info_keys = list(ipv6_info.keys())
+ipv6_info_values = list(ipv6_info.values())
+#########################################################################################
+
+nic_info = {
+    "Network Interface"             : get_iface,
+    "MAC Address"                   : ip_data,
+    "MAC Broadcast"                 : ip_data
+}
+
+nic_info_keys = list(nic_info.keys())
+nic_info_values = list(nic_info.values())
+#########################################################################################

@@ -26,8 +26,6 @@ class NetworkScanner(customtkinter.CTkFrame):
         self._corner_radius = CORNER_RADIUS_0
         
         self.checkbox_list = [] # gui checkbox list
-        #self.checkbox_args_list = [] # onvalue checkbox args (when-checked)
-        #self.args_list = [] # receives the args_list of self.checkbox_args_list
          
         self.loaded_args = [] # this is just placeholder for future checkbox_args_list appension
         
