@@ -1,6 +1,6 @@
 from data.ifaces import ifaces
 from ops.net.get_ip_info import (
-    ip_data, get_iface, get_ip6_mask, get_localhost_ip
+    ip_data, get_iface, get_ip6_mask, get_localhost_ip, calculate_network_address
 )
 
 scan_init = "nmap"
@@ -69,6 +69,7 @@ ipv4_info = {
     "IPv4 Address"                  : ip_data,
     "IPv6 Netmask"                  : ip_data,
     "IPv4 Broadcast"                : ip_data,
+    "Network Address"               : calculate_network_address
 }
 
 ipv4_info_keys = list(ipv4_info.keys())

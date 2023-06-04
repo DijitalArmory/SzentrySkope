@@ -3,12 +3,19 @@ import netifaces
 import re
 import sys
 import os
+import ipaddress
+
 myDir = os.getcwd()
 sys.path.append(myDir)
 
 path = Path(myDir)
 a = str(path.parent.absolute())
 sys.path.append(a)
+from data.ifaces import ifaces
+
+def calculate_network_address(ip_address, subnet_mask):
+    network = ipaddress.ip_interface(f"{ip_address}/{subnet_mask}")
+    return network.network
 
 
 
@@ -85,11 +92,15 @@ def get_localhost_ip():
 TODO - ip_data function is to be imported to hostoptionsbox
 NOTE - this is how to initialize the functions
 
+
 ip4_addr = ip_data(ifaces, 'addr', '4')
 print(ip4_addr)
 
 ip4_mask = ip_data(ifaces, 'netmask', '4')
 print(ip4_mask)
+
+net_addr = calculate_network_address(ip4_addr, ip4_mask)
+print("NETWORK ADDR -> ",net_addr)
 
 ip4_broadcast = ip_data(ifaces, 'broadcast', '4')
 print(ip4_broadcast)
