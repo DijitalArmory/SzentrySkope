@@ -7,8 +7,9 @@ from constants.constants import (
     CORNER_RADIUS_0, GRID_ROW_2, GRID_COL_2, PADY_1, PADX_1, NSEW, PADX_2, 
     PADY_2, PADX_1, N
 )
+from constants.path_constants import (PATH_1)
 from data.net_scan_data import scan_ports
-sys.path.append('/home/cybershield/SzentrySkope/src/gui/frames/')
+sys.path.append('/home/debian//SzentrySkope/src/gui/frames/')
 from err.err_msg import ErrMsg
 
 class PortOptionsBox(customtkinter.CTkFrame):

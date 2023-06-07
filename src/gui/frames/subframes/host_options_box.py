@@ -1,5 +1,6 @@
 import customtkinter
 import sys
+import re
 import traceback
 from data.net_scan_data import (
     ipv4_info_keys, ipv4_info_values, ipv6_info_keys, ipv6_info_values, 
@@ -10,12 +11,13 @@ from constants.constants import (
     CORNER_RADIUS_0, GRID_ROW_2, GRID_COL_2, PADY_1, PADX_1, NSEW, PADX_2,
     PADY_2, PADX_1, N
 )
+from constants.path_constants import (PATH_1)
 
-sys.path.append('/home/cybershield/SzentrySkope/src/data/')
+sys.path.append('/home/debian/SzentrySkope/src/data/')
 from data.ifaces import ifaces
 
-sys.path.append('/home/cybershield/SzentrySkope/src/gui/frames/err')
-from err.err_msg import ErrMsg
+sys.path.append('/home/debian/SzentrySkope/src/gui/frames/err/')
+from src.gui.frames.err.err_msg import ErrMsg
 
 
 class HostOptionsBox(customtkinter.CTkFrame):
@@ -46,9 +48,12 @@ class HostOptionsBox(customtkinter.CTkFrame):
             self, text="All Hosts", variable=self.radio_var, value=1, command=self.toggle_button_text)
         self.radio_button_2.grid(
             row=GRID_ROW_2, column=GRID_COL_2, pady=PADY_2, padx=PADX_1, sticky=N)
-        self.radio_button_3 = customtkinter.CTkRadioButton(
-            self, text="Manual", variable=self.radio_var, value=2)
-        self.radio_button_3.grid(row=3, column=2, pady=10, padx=20, sticky="n")
+        
+        self.switch = customtkinter.CTkSwitch(self, text=None + " Off", variable=self.switch_var, onvalue="on", offvalue="off", command=self.switch_event)
+        self.switch.grid(row=3, column=2, pady=PADY_2, padx=PADX_1, sticky="n", columnspan=1)
+
+        self.start_value = tkinter.StringVar()
+        self.end_value = tkinter.StringVar()
 
         self.entry_start = customtkinter.CTkEntry(
             self, placeholder_text="From...", textvariable=self.start_value)
@@ -63,6 +68,8 @@ class HostOptionsBox(customtkinter.CTkFrame):
         self.submit_button.grid(row=6, column=2, columnspan=1, padx=(
             10, 10), pady=(10, 10), sticky="nsew")
 
+
+        
         self.entry_start.configure(state=tkinter.DISABLED)
         self.entry_end.configure(state=tkinter.DISABLED)
         self.submit_button.configure(state=tkinter.DISABLED)  
@@ -83,23 +90,17 @@ class HostOptionsBox(customtkinter.CTkFrame):
         self.end_input = self.end_value.get()
         
         try:
+            ipv4_pattern = r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
+            ipv4_cidr_pattern = r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})(\/([0-9]|[1-2][0-9]|3[0-2]))$'
             self.start_value = int(self.start_input)
             self.end_value = int(self.end_input)
             
-            if 1 <= self.start_value <= 65535 and 1 <= self.end_value <= 65535 and self.start_value < self.end_value:
-                self.start_value = self.start_value
-                self.end_value = self.end_value
-                # Use the start_value and end_value as needed
-                print("Start value:", self.start_value)
-                print("End value:", self.end_value)
-                self.args_list = [f"-p {str(self.start_value)}-{str(self.end_value)}"]
-                print(self.args_list)
-                self.command(self.args_list)
-                self.reset_instance()
+            if re.match(ipv4_pattern, self.start_value) or re.match(ipv4_cidr_pattern, self.start_value):
+                print("MATCHES")
             
             else:
-                self.err1 = ErrMsg(message="Invalid input values. Please enter integers between 1 and 65535, with the start value less than the end value.\nPort settings being reset back to default settings")
-                self.reset_instance()  # Reset instance on error
+                print("NO MATCH")
+                
 
         except ValueError as e:
             self.err2 = ErrMsg(message="Invalid input values. No characters Allowed. Only integers between 1-65535\nPort settings being reset back to default settings")
