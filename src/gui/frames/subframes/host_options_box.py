@@ -21,11 +21,14 @@ from src.gui.frames.err.err_msg import ErrMsg
 
 
 class HostOptionsBox(customtkinter.CTkFrame):
-    def __init__(self, master):
+    def __init__(self, master, args_list=None, command=None):
         super().__init__(master)
 
         self.grid(row=0, column=3, padx=(PADX_1, 20),
                   pady=(PADY_1, 0), sticky=NSEW)
+        
+        self.command = command
+        self.args_list = args_list if args_list is not None else []
         self.localhost = ipv4_info_values[0]()
         self.ip4 = ipv4_info_values[1](ifaces, 'addr', '4')
         self.ip4_mask = ipv4_info_values[2](ifaces, 'netmask', '4')
@@ -37,81 +40,108 @@ class HostOptionsBox(customtkinter.CTkFrame):
         self.previous_selection = ""
 
         self.radio_var = tkinter.IntVar(value=0)
+        self.switch_var = customtkinter.StringVar(value="off")
 
         self.label_radio_group = customtkinter.CTkLabel(self,  text="Hosts")
         self.label_radio_group.grid(
             row=0, column=2, columnspan=1, padx=PADX_2, pady=PADY_2, sticky="")
         self.radio_button_1 = customtkinter.CTkRadioButton(
-            self, text="Localhost", variable=self.radio_var, value=0, command=self.toggle_button_text)
+            self, text="Localhost", variable=self.radio_var, value=0, command=self.radio_button_command)
         self.radio_button_1.grid(row=1, column=2, pady=10, padx=20, sticky="n")        
         self.radio_button_2 = customtkinter.CTkRadioButton(
-            self, text="All Hosts", variable=self.radio_var, value=1, command=self.toggle_button_text)
+            self, text="All Hosts", variable=self.radio_var, value=1, command=self.radio_button_command)
         self.radio_button_2.grid(
             row=GRID_ROW_2, column=GRID_COL_2, pady=PADY_2, padx=PADX_1, sticky=N)
         
-        self.switch = customtkinter.CTkSwitch(self, text=None + " Off", variable=self.switch_var, onvalue="on", offvalue="off", command=self.switch_event)
+        self.switch = customtkinter.CTkSwitch(self, text="Custom" + " Off", variable=self.switch_var, onvalue="on", offvalue="off", command=self.switch_event)
         self.switch.grid(row=3, column=2, pady=PADY_2, padx=PADX_1, sticky="n", columnspan=1)
 
         self.start_value = tkinter.StringVar()
-        self.end_value = tkinter.StringVar()
+        
 
         self.entry_start = customtkinter.CTkEntry(
             self, placeholder_text="From...", textvariable=self.start_value)
         self.entry_start.grid(row=4, column=2, columnspan=1, padx=(
             10, 10), pady=(10, 10), sticky="nsew")
-        self.entry_end = customtkinter.CTkEntry(
-            self, placeholder_text="To...", textvariable=self.end_value)
-        self.entry_end.grid(row=5, column=2, columnspan=1,
-                            padx=(10, 10), pady=(10, 10), sticky="nsew")
         self.submit_button = customtkinter.CTkButton(
             self, text="submit", command=self.submit_button_event)
         self.submit_button.grid(row=6, column=2, columnspan=1, padx=(
             10, 10), pady=(10, 10), sticky="nsew")
 
-
-        
         self.entry_start.configure(state=tkinter.DISABLED)
-        self.entry_end.configure(state=tkinter.DISABLED)
         self.submit_button.configure(state=tkinter.DISABLED)  
 
 
-    def toggle_button_text(self):
+    def radio_button_command(self):
         self.current_selection = self.radio_var.get()
         if self.radio_var.get() == 0:  # Localhost selected
             self.radio_button_1.configure(text=self.localhost)
+            self.args_list = [self.localhost]
+            print(self.args_list)
+            self.command(self.args_list)
         elif self.radio_var.get() == 1:  # Localhost selected
             self.radio_button_2.configure(text=self.net_addr)
+            self.args_list = [self.net_addr]
+            print(self.args_list)
+            self.command(self.args_list)
 
         self.previous_selection = self.current_selection
 
+    def switch_event(self):
+        self.switch_state = self.switch_var.get()
+        
+        if self.switch_state == "on":
+            self.switch.configure(text="Custom" + " On")
+            self.radio_button_1.configure(state=tkinter.DISABLED)
+            self.radio_button_2.configure(state=tkinter.DISABLED)
+             # Enable entry fields and submit button
+            self.entry_start.configure(state=tkinter.NORMAL)
+            self.submit_button.configure(state=tkinter.NORMAL)
+
+        else: 
+             # Enable radio buttons
+            self.switch.configure(text="Custom" + " Off")
+            self.radio_button_1.configure(state=tkinter.NORMAL)
+            self.radio_button_2.configure(state=tkinter.NORMAL)
+
+            # Disable entry fields and submit button
+            self.entry_start.configure(state=tkinter.DISABLED)
+            self.submit_button.configure(state=tkinter.DISABLED)
 
     def submit_button_event(self):
-        self.start_input = self.start_value.get()
-        self.end_input = self.end_value.get()
+        
         
         try:
+            self.start_input = self.start_value.get()
             ipv4_pattern = r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
             ipv4_cidr_pattern = r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})(\/([0-9]|[1-2][0-9]|3[0-2]))$'
-            self.start_value = int(self.start_input)
-            self.end_value = int(self.end_input)
             
             if re.match(ipv4_pattern, self.start_value) or re.match(ipv4_cidr_pattern, self.start_value):
+                self.start_value = self.start_input
                 print("MATCHES")
-            
+                self.args_list = [self.start_value]
+                print(self.args_list)
+                self.reset_instance()
             else:
                 print("NO MATCH")
                 
 
         except ValueError as e:
-            self.err2 = ErrMsg(message="Invalid input values. No characters Allowed. Only integers between 1-65535\nPort settings being reset back to default settings")
+            #self.err2 = ErrMsg(message="Invalid input values. No characters Allowed. Only integers between 1-65535\nPort settings being reset back to default settings")
             self.reset_instance()  # Reset instance on error
         except Exception as e:
             print("An error occurred:", str(e))
             traceback.print_exc()  # Print the traceback for debugging
             self.reset_instance()  # Reset instance on error
+    
 
-
-
+    def reset_instance(self):
+        # Reset instance variables to their initial values
+        self.radio_var.set(0)
+        self.switch_var.set("off")
+        self.entry_start.delete(0, tkinter.END)
+        self.switch_event()  # Reset switch state
+        self.radio_button_command()  # Trigger radio button command
 '''
 NOTE - Leftoff; entry fields need logic
 6/4/23
