@@ -47,7 +47,8 @@ class NetworkScanner(customtkinter.CTkFrame):
         self.scan_intensity_box.grid_rowconfigure(4, weight=1)
 
         # creat host scaning options frame
-        self.host_options_box = HostOptionsBox(self)
+        self.host_options_args_list = []
+        self.host_options_box = HostOptionsBox(self, args_list=self.host_options_args_list, command=self.on_gui_callback3)
     
         # create port_range box
         self.port_args_list = []
@@ -90,6 +91,11 @@ class NetworkScanner(customtkinter.CTkFrame):
     def on_gui_callback2(self, data):
         self.port_args_list = data
         print("Received callback2 signal from non-GUI code:", data)
+
+    def on_gui_callback3(self, data):
+        self.host_options_args_list = data
+        print("Received callback3 signal from non-GUI code:", data)
+        print("TYPE-> ", type(data))
 
   
 

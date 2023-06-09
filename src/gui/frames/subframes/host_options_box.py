@@ -115,16 +115,16 @@ class HostOptionsBox(customtkinter.CTkFrame):
             self.start_input = self.start_value.get()
             ipv4_pattern = r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
             ipv4_cidr_pattern = r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})(\/([0-9]|[1-2][0-9]|3[0-2]))$'
-            
-            if re.match(ipv4_pattern, self.start_value) or re.match(ipv4_cidr_pattern, self.start_value):
+
+            if re.match(ipv4_pattern, self.start_input) or re.match(ipv4_cidr_pattern, self.start_input):
                 self.start_value = self.start_input
                 print("MATCHES")
                 self.args_list = [self.start_value]
-                print(self.args_list)
+                print("args-list is now -> ", self.args_list)
                 self.reset_instance()
             else:
                 print("NO MATCH")
-                
+                            
 
         except ValueError as e:
             #self.err2 = ErrMsg(message="Invalid input values. No characters Allowed. Only integers between 1-65535\nPort settings being reset back to default settings")
