@@ -29,6 +29,8 @@ class HostOptionsBox(customtkinter.CTkFrame):
         
         self.command = command
         self.args_list = args_list if args_list is not None else []
+
+        
         self.localhost = ipv4_info_values[0]()
         self.ip4 = ipv4_info_values[1](ifaces, 'addr', '4')
         self.ip4_mask = ipv4_info_values[2](ifaces, 'netmask', '4')

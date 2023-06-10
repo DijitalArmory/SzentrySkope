@@ -1,7 +1,6 @@
 import customtkinter
 from gui.frames.subframes.scan_techniques_box import ScanTechniquesBox
 from gui.frames.subframes.exclusions_box import ExclusionsBox
-#from constants.net_scan_gui_const import scan_techniques_txt
 from gui.frames.subframes.scan_intensity_box import ScanIntensityBox
 from gui.frames.subframes.host_options_box import HostOptionsBox
 from gui.frames.subframes.port_options_box import PortOptionsBox
