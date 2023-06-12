@@ -1,6 +1,7 @@
 import customtkinter
 import tkinter
 import threading
+import functools
 from data.net_scan_data import (udp_protocols, scan_service_detection)
 from constants.constants import (
     CORNER_RADIUS_0, WIDTH_250, NSEW, PADY_1, PADY_1, GRID_ROW_1, GRID_COL_2, 
@@ -13,7 +14,7 @@ from constants.net_scan_gui_const import (
 from constants.net_script_scan import net_script_scan_list
 
 class ExclusionsBox(customtkinter.CTkTabview):
-    def __init__(self, master, args_list=None, command=None):
+    def __init__(self, master, args_list1=None, args_list2=None, args_list3=None, command=None):
         super().__init__(master)
 
         self.scrollable_frame_switches = []
@@ -35,8 +36,9 @@ class ExclusionsBox(customtkinter.CTkTabview):
 
 
         self.command = command
-        self.args_list = args_list if args_list is not None else []
-
+        self.args_list1 = args_list1 if args_list1 is not None else []
+        self.args_list2 = args_list2 if args_list2 is not None else []
+        self.args_list3 = args_list3 if args_list3 is not None else []
         
 
 
@@ -51,7 +53,7 @@ class ExclusionsBox(customtkinter.CTkTabview):
         self.tcpudp_tab.grid(row=0, column=0, padx=20, pady=20)
 
         self.combobox_tcpudp = customtkinter.CTkComboBox(self.tab(PRANGE_1),
-                                                    values=["None", PRANGE_1_VAL_1, self.udp_option], command=self.get_tcpudp_val)
+                                                    values=["None", PRANGE_1_VAL_1, self.udp_option], command=self.set_tcpudp_val)
         self.combobox_tcpudp.grid(row=1, column=0, padx=20, pady=(20, 10))
         
 
@@ -65,7 +67,8 @@ class ExclusionsBox(customtkinter.CTkTabview):
         '''
 
         self.combobox_1 = customtkinter.CTkComboBox(self.tab(PRANGE_2),
-                                                    values=[PRANGE_2_VAL_NONE, PRANGE_2_VAL_1, PRANGE_2_VAL_2, PRANGE_2_VAL_3])
+                                                    values=[PRANGE_2_VAL_NONE, self.service_options[0], self.service_options[1], self.service_options[2]], 
+                                                    command=self.set_service_val)
         self.combobox_1.grid(row=1, column=0, padx=20, pady=(20, 10))
 
         self.label_tab_2 = customtkinter.CTkLabel(
@@ -86,31 +89,71 @@ class ExclusionsBox(customtkinter.CTkTabview):
         self.create_switches_thread = threading.Thread(target=self.create_switches, args=(net_script_scan_list, self.scrollable_frame_switches))
         self.create_switches_thread.start()
 
-    # This function is threaded due to it's long blocking time while switches are being appended
-    def create_switches(self, names_list, switch_list):        
+        #self.handle_toggle_thread = threading.Thread(target=self.testfunc)
+        #self.handle_toggle_thread.start()
         
+    # This function is threaded due to it's long blocking time while switches are being appended
+        # Dictionary to store switch states
+        self.switch_states = {}
+
+    def create_switches(self, names_list, switch_list):        
         for i, element in enumerate(names_list):
             self.switch = customtkinter.CTkSwitch(self.scrollable_frame, text=f"{i}. {element}")
             self.switch.grid(row=i, column=0, padx=10, pady=(0, 20), sticky="w")
-            self.switch.bind("<Button-1>", self.testfunc)
+            
+            # Bind switch to a custom function with additional argument
+            self.switch.bind("<Button-1>", functools.partial(self.testfunc, i, element=element))
+            
+            # Store initial switch state
+            self.switch_states[i] = "off"
+            
             switch_list.append(self.switch)
-            
-            
 
-        
-        
-    #test - print the switch is selected
-    def testfunc(self):
-        print("switch_clicked")
 
-    def get_tcpudp_val(self, selected_value):
-        self.selected_value = selected_value
-        if self.selected_value == self.udp_option:
-            self.args_list = [self.udp_option_val]
-            #self.args_list = [self.udp_option_val]
-            print(self.args_list)
-        elif self.udp_option_val in self.args_list:
-            self.args_list.remove(self.udp_option_val)
-            print(self.args_list)
+    def testfunc(self, switch_index, *args, **kwargs):
+        # Retrieve the 'element' argument if it exists
+        if "element" in kwargs:
+            element = kwargs["element"]
+            # Toggle the switch state
+        if self.switch_states[switch_index] == "on":
+            self.switch_states[switch_index] = "off"
+            # Remove switch value from args_list3
+            self.args_list3.remove(element)
         else:
+            self.switch_states[switch_index] = "on"
+            # Append switch value to args_list3
+            self.args_list3.append(element)
+
+        # Print the switch state
+        if self.switch_states[switch_index] == "on":
+            print(f"Switch {switch_index} clicked ON")
+        else:
+            print(f"Switch {switch_index} clicked OFF")
+
+        # Print the updated args_list3
+        print(self.args_list3)
+
+
+    def set_tcpudp_val(self, selected_option):
+        self.selected_option = selected_option
+        if self.selected_option == self.udp_option:
+            self.args_list1.append(self.udp_option_val)
+            print(self.args_list1)
+        elif self.udp_option_val in self.args_list1:
+            self.args_list1.remove(self.udp_option_val)
+            print(self.args_list1)
+        else:
+            print(self.args_list1)
             return
+        
+    def set_service_val(self, selected_value):
+        if selected_value in self.service_options:
+            index = self.service_options.index(selected_value)
+            self.args_list2 = [self.service_options_vals[index]]
+        else:
+            self.args_list2 = []
+
+        # Print the updated args_list
+        print(self.args_list2)
+
+    
