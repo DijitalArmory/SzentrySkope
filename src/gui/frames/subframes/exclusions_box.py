@@ -39,6 +39,7 @@ class ExclusionsBox(customtkinter.CTkTabview):
         self.args_list1 = args_list1 if args_list1 is not None else []
         self.args_list2 = args_list2 if args_list2 is not None else []
         self.args_list3 = args_list3 if args_list3 is not None else []
+
         
 
 
@@ -89,7 +90,7 @@ class ExclusionsBox(customtkinter.CTkTabview):
         self.create_switches_thread = threading.Thread(target=self.create_switches, args=(net_script_scan_list, self.scrollable_frame_switches))
         self.create_switches_thread.start()
 
-        #self.handle_toggle_thread = threading.Thread(target=self.testfunc)
+        #self.handle_toggle_thread = threading.Thread(target=self.switch_event)
         #self.handle_toggle_thread.start()
         
     # This function is threaded due to it's long blocking time while switches are being appended
@@ -102,7 +103,7 @@ class ExclusionsBox(customtkinter.CTkTabview):
             self.switch.grid(row=i, column=0, padx=10, pady=(0, 20), sticky="w")
             
             # Bind switch to a custom function with additional argument
-            self.switch.bind("<Button-1>", functools.partial(self.testfunc, i, element=element))
+            self.switch.bind("<Button-1>", functools.partial(self.switch_event, i, element=element))
             
             # Store initial switch state
             self.switch_states[i] = "off"
@@ -110,7 +111,7 @@ class ExclusionsBox(customtkinter.CTkTabview):
             switch_list.append(self.switch)
 
 
-    def testfunc(self, switch_index, *args, **kwargs):
+    def switch_event(self, switch_index, *args, **kwargs):
         # Retrieve the 'element' argument if it exists
         if "element" in kwargs:
             element = kwargs["element"]

@@ -74,7 +74,6 @@ class PortOptionsBox(customtkinter.CTkFrame):
 
         print(self.args_list)
 
-        
     def radio_button_command(self):
         self.current_selection = self.radio_var.get()
         if self.current_selection == self.first_value:
@@ -87,9 +86,12 @@ class PortOptionsBox(customtkinter.CTkFrame):
             self.args_list = [self.second_value]
             print(self.args_list)
             self.command(self.args_list)
-        
+           
+    
         self.previous_selection = self.current_selection
 
+
+        
     def switch_event(self):
         self.switch_state = self.switch_var.get()
         

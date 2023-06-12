@@ -37,7 +37,11 @@ class NetworkScanner(customtkinter.CTkFrame):
         
         
         # create vuln_range frame
-        self.vuln_range_box = ExclusionsBox(self)
+        self.tcpudp_options_args_list = []
+        self.service_options_args_list = []
+        self.script_options_args_list = []
+        self.combined_exclusions_box_args_list = []
+        self.vuln_range_box = ExclusionsBox(self, args_list1=  self.tcpudp_options_args_list, args_list2= self.service_options_args_list, args_list3= self.script_options_args_list, command=self.on_gui_callback4)
         self.vuln_range_box.grid(row=0, column=2, padx=(20, 0), pady=(20, 0), sticky="nsew")
 
         # create scan_intensity_box frame
@@ -47,11 +51,11 @@ class NetworkScanner(customtkinter.CTkFrame):
 
         # creat host scaning options frame
         self.host_options_args_list = []
-        self.host_options_box = HostOptionsBox(self, args_list=self.host_options_args_list, command=self.on_gui_callback3)
+        self.host_options_box = HostOptionsBox(self, args_list=self.host_options_args_list, command=self.execute_non_gui_code3)
     
         # create port_range box
         self.port_args_list = []
-        self.port_options_box = PortOptionsBox(self, args_list=self.port_args_list, command=self.on_gui_callback2)
+        self.port_options_box = PortOptionsBox(self, args_list=self.port_args_list, command=self.execute_non_gui_code2)
 
         # create 'Begin Scan' button
         self.main_button_1 = customtkinter.CTkButton(master=self, fg_color=TRANSPARENT, border_width=2, text="Start Scan", text_color=(SHADE_3, "#DCE4EE"))
@@ -78,13 +82,34 @@ class NetworkScanner(customtkinter.CTkFrame):
         self.port_args_handler = ArgsHandler(self.port_args_list)
         self.port_args_handler.register_gui_callback(self.on_gui_callback2)
 
+        self.host_args_handler = ArgsHandler(self.host_options_args_list)
+        self.host_args_handler.register_gui_callback(self.on_gui_callback3)
+
+        #self.tcpudp_args_handler = ArgsHandler(self.tcpudp_options_args_list)
+        #self.tcpudp_args_handler.register_gui_callback(self.on_gui_callback4)
+
+        #self.service_args_handler = ArgsHandler(self.service_options_args_list)
+        #self.service_args_handler.register_gui_callback(self.on_gui_callback4)
+
+        #self.script_args_handler = ArgsHandler(self.script_options_args_list)
+        #self.script_args_handler.register_gui_callback(self.on_gui_callback4)
+
     def execute_non_gui_code(self):
         self.checkbox_args_handler.non_gui_method() # handle checbox args phase2
         
+
+    def execute_non_gui_code2(self, list):
+        self.port_args_handler.non_gui_method()
         print("Executing non-gui code")
 
+    def execute_non_gui_code3(self, list):
+        self.host_args_handler.non_gui_method()
+
+    
+        
+
     def on_gui_callback(self, data):
-        data = self.checkbox_args_list # handle checbox args phase3
+        data = self.checkbox_args_list 
         print("Received callback1 signal from non-GUI code:", data)
 
     def on_gui_callback2(self, data):
@@ -96,6 +121,16 @@ class NetworkScanner(customtkinter.CTkFrame):
         print("Received callback3 signal from non-GUI code:", data)
         print("TYPE-> ", type(data))
 
-  
-
-
+    def on_gui_callback4(self, data1, data2, data3):
+        self.tcpudp_options_args_list = data1
+        self.service_options_args_list = data2
+        self.script_options_args_list = data3
+        print("Received callback4 signal from non-GUI code:", data1)
+        print("TYPE-> ", type(data1))
+        print("------------------------------------")
+        print("Received callback4 signal from non-GUI code:", data2)
+        print("TYPE-> ", type(data2))
+        print("------------------------------------")
+        print("Received callback4 signal from non-GUI code:", data3)
+        print("TYPE-> ", type(data3))
+       
