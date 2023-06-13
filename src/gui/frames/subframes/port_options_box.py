@@ -9,8 +9,8 @@ from constants.constants import (
 )
 from constants.path_constants import (PATH_1)
 from data.net_scan_data import scan_ports
-sys.path.append('/home/debian//SzentrySkope/src/gui/frames/')
-from err.err_msg import ErrMsg
+#sys.path.append('/home/cyberyshield/SzentrySkope/src/gui/frames/')
+#from err.err_msg import ErrMsg
 
 class PortOptionsBox(customtkinter.CTkFrame):
     def __init__(self, master, args_list=None, command=None):
@@ -76,7 +76,7 @@ class PortOptionsBox(customtkinter.CTkFrame):
 
     def radio_button_command(self):
         self.current_selection = self.radio_var.get()
-        if self.current_selection == self.first_value:
+        if self.current_selection == self.first_value and self.current_selection not in self.args_list:
             self.args_list = [self.first_value]
             print(self.args_list)
             self.command(self.args_list)
@@ -138,11 +138,11 @@ class PortOptionsBox(customtkinter.CTkFrame):
                 self.reset_instance()
             
             else:
-                self.err1 = ErrMsg(message="Invalid input values. Please enter integers between 1 and 65535, with the start value less than the end value.\nPort settings being reset back to default settings")
+                #self.err1 = ErrMsg(message="Invalid input values. Please enter integers between 1 and 65535, with the start value less than the end value.\nPort settings being reset back to default settings")
                 self.reset_instance()  # Reset instance on error
 
         except ValueError as e:
-            self.err2 = ErrMsg(message="Invalid input values. No characters Allowed. Only integers between 1-65535\nPort settings being reset back to default settings")
+            #self.err2 = ErrMsg(message="Invalid input values. No characters Allowed. Only integers between 1-65535\nPort settings being reset back to default settings")
             self.reset_instance()  # Reset instance on error
         except Exception as e:
             print("An error occurred:", str(e))

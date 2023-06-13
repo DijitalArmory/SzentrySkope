@@ -135,9 +135,14 @@ class ExclusionsBox(customtkinter.CTkTabview):
         print(self.args_list3)
 
 
+    '''
+    LEFTOFF 6/13
+    UDP option being appended multiple times when clicked sequencially
+    intvar resolution?
+    '''
     def set_tcpudp_val(self, selected_option):
         self.selected_option = selected_option
-        if self.selected_option == self.udp_option:
+        if self.selected_option == self.udp_option and self.selected_option not in self.args_list1:
             self.args_list1.append(self.udp_option_val)
             print(self.args_list1)
         elif self.udp_option_val in self.args_list1:
@@ -148,7 +153,7 @@ class ExclusionsBox(customtkinter.CTkTabview):
             return
         
     def set_service_val(self, selected_value):
-        if selected_value in self.service_options:
+        if selected_value in self.service_options and self.service_options not in self.args_list2:
             index = self.service_options.index(selected_value)
             self.args_list2 = [self.service_options_vals[index]]
         else:

@@ -113,8 +113,8 @@ class NetworkScanner(customtkinter.CTkFrame):
         print("Received callback1 signal from non-GUI code:", data)
 
     def on_gui_callback2(self, data):
-        self.port_args_list = data
-        print("Received callback2 signal from non-GUI code:", data)
+            self.port_args_list = data
+            print("Received callback2 signal from non-GUI code:", data)
 
     def on_gui_callback3(self, data):
         self.host_options_args_list = data
