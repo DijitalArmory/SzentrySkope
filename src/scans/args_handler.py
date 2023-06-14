@@ -2,7 +2,7 @@
 
 
 class ArgsHandler:
-    def __init__(self, command=None, args_list1=None, loaded_args=None):
+    def __init__(self, command=None, args_list1=None):
         self.gui_callback1 = None
         self.gui_callback2 = None
       
@@ -22,11 +22,7 @@ class ArgsHandler:
             self.gui_callback1(self.args_list1)
             print("Sending callback1 signal from non-GUI code:", self.args_list1)
         
-        if self.gui_callback2 is not None:
-            self.gui_callback2(self.args_list1)
-            print("Sending callback2 signal from non-GUI code:", self.args_list2)
-
-   
+       
 
             
         

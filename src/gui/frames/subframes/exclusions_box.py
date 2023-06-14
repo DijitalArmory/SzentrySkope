@@ -39,26 +39,22 @@ class ExclusionsBox(customtkinter.CTkTabview):
         self.args_list1 = args_list1 if args_list1 is not None else []
         self.args_list2 = args_list2 if args_list2 is not None else []
         self.args_list3 = args_list3 if args_list3 is not None else []
-
-        
-
-
         
             # TCP UDP OPTIONS
-        
+        self.previous_selection = ""
         self.udp_option = list(udp_protocols.keys())[0]
         self.udp_option_val = list(udp_protocols.values())[0]
+        self.tcp_option = []
+        self.tcp_option_val = []
 
         self.tcpudp_tab = customtkinter.CTkLabel(
             self.tab(PRANGE_1), text="Select TCP or UDP")
         self.tcpudp_tab.grid(row=0, column=0, padx=20, pady=20)
 
         self.combobox_tcpudp = customtkinter.CTkComboBox(self.tab(PRANGE_1),
-                                                    values=["None", PRANGE_1_VAL_1, self.udp_option], command=self.set_tcpudp_val)
+                                                    values=["None", PRANGE_1_VAL_1, self.udp_option], command=lambda option: self.set_tcpudp_val(option))
         self.combobox_tcpudp.grid(row=1, column=0, padx=20, pady=(20, 10))
         
-
-
             # SERVICE SCAN
         self.service_options = list(scan_service_detection.keys())
         self.service_options_vals = list(scan_service_detection.values())
@@ -110,7 +106,6 @@ class ExclusionsBox(customtkinter.CTkTabview):
             
             switch_list.append(self.switch)
 
-
     def switch_event(self, switch_index, *args, **kwargs):
         # Retrieve the 'element' argument if it exists
         if "element" in kwargs:
@@ -134,24 +129,15 @@ class ExclusionsBox(customtkinter.CTkTabview):
         # Print the updated args_list3
         print(self.args_list3)
 
-
-    '''
-    LEFTOFF 6/13
-    UDP option being appended multiple times when clicked sequencially
-    intvar resolution?
-    '''
     def set_tcpudp_val(self, selected_option):
-        self.selected_option = selected_option
-        if self.selected_option == self.udp_option and self.selected_option not in self.args_list1:
-            self.args_list1.append(self.udp_option_val)
-            print(self.args_list1)
-        elif self.udp_option_val in self.args_list1:
-            self.args_list1.remove(self.udp_option_val)
-            print(self.args_list1)
+        if selected_option == PRANGE_1_VAL_1:
+            self.args_list1 = ["-Ss"]
+        elif selected_option == self.udp_option:
+            self.args_list1 = [self.udp_option_val]
         else:
-            print(self.args_list1)
-            return
-        
+            self.args_list1 = []  # Set to None if "None" or any other option is selected
+        print(self.args_list1)
+
     def set_service_val(self, selected_value):
         if selected_value in self.service_options and self.service_options not in self.args_list2:
             index = self.service_options.index(selected_value)
