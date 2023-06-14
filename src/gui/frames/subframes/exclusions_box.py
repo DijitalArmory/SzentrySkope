@@ -14,7 +14,7 @@ from constants.net_scan_gui_const import (
 from constants.net_script_scan import net_script_scan_list
 
 class ExclusionsBox(customtkinter.CTkTabview):
-    def __init__(self, master, args_list1=None, args_list2=None, args_list3=None, command=None):
+    def __init__(self, master, main_args=None, command=None):
         super().__init__(master)
 
         self.scrollable_frame_switches = []
@@ -36,10 +36,12 @@ class ExclusionsBox(customtkinter.CTkTabview):
 
 
         self.command = command
-        self.args_list1 = args_list1 if args_list1 is not None else []
-        self.args_list2 = args_list2 if args_list2 is not None else []
-        self.args_list3 = args_list3 if args_list3 is not None else []
-        
+        self.args_list1 = []
+        self.args_list2 = []
+        self.args_list3 = []
+        self.main_args = main_args if main_args is not None else []
+        self.update_main_args()
+
             # TCP UDP OPTIONS
         self.previous_selection = ""
         self.udp_option = list(udp_protocols.keys())[0]
@@ -93,6 +95,7 @@ class ExclusionsBox(customtkinter.CTkTabview):
         # Dictionary to store switch states
         self.switch_states = {}
 
+
     def create_switches(self, names_list, switch_list):        
         for i, element in enumerate(names_list):
             self.switch = customtkinter.CTkSwitch(self.scrollable_frame, text=f"{i}. {element}")
@@ -126,6 +129,8 @@ class ExclusionsBox(customtkinter.CTkTabview):
         else:
             print(f"Switch {switch_index} clicked OFF")
 
+        self.update_main_args()
+        print("MAIN ARGS-> ", self.main_args)
         # Print the updated args_list3
         print(self.args_list3)
 
@@ -136,6 +141,10 @@ class ExclusionsBox(customtkinter.CTkTabview):
             self.args_list1 = [self.udp_option_val]
         else:
             self.args_list1 = []  # Set to None if "None" or any other option is selected
+        self.update_main_args()
+        print(self.args_list1)
+        print("MAIN ARGS-> ", self.main_args)
+
         print(self.args_list1)
 
     def set_service_val(self, selected_value):
@@ -144,8 +153,16 @@ class ExclusionsBox(customtkinter.CTkTabview):
             self.args_list2 = [self.service_options_vals[index]]
         else:
             self.args_list2 = []
+        self.update_main_args()
+        print(self.args_list1)
+        print("MAIN ARGS-> ", self.main_args)
 
         # Print the updated args_list
         print(self.args_list2)
 
+    def update_main_args(self):
+        self.main_args = self.args_list1 + self.args_list2 + self.args_list3
+        print("MAIN ARGS-> ", self.main_args)
+
+    
     

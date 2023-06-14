@@ -37,10 +37,9 @@ class NetworkScanner(customtkinter.CTkFrame):
         
         
         # create vuln_range frame
-        self.tcpudp_options_args_list = []
-        self.service_options_args_list = []
-        self.script_options_args_list = []
-        self.vuln_range_box = ExclusionsBox(self, args_list1=  self.tcpudp_options_args_list, args_list2= self.service_options_args_list, args_list3= self.script_options_args_list, command=self.execute_non_gui_code4)
+        
+        self.vuln_range_box_args = []
+        self.vuln_range_box = ExclusionsBox(self, main_args=self.vuln_range_box_args, command=self.execute_non_gui_code4)
         self.vuln_range_box.grid(row=0, column=2, padx=(20, 0), pady=(20, 0), sticky="nsew")
 
         # create scan_intensity_box frame
@@ -75,19 +74,20 @@ class NetworkScanner(customtkinter.CTkFrame):
         self.main_button_1.grid(row=GRID_ROW_3, column=GRID_COL_2, padx=(PADX_1, PADX_1), pady=(PADY_1, PADY_1), sticky=NSEW)
 
         # handle checbox args phase1selected_value
-        self.checkbox_args_handler = ArgsHandler(self.checkbox_args_list)
+        self.checkbox_args_handler = ArgsHandler(args_list1=self.checkbox_args_list)
         self.checkbox_args_handler.register_gui_callback(self.on_gui_callback)
 
-        self.port_args_handler = ArgsHandler(self.port_args_list)
+        self.port_args_handler = ArgsHandler(args_list1=self.port_args_list)
         self.port_args_handler.register_gui_callback(self.on_gui_callback2)
 
-        self.host_args_handler = ArgsHandler(self.host_options_args_list)
+        self.host_args_handler = ArgsHandler(args_list1=self.host_options_args_list)
         self.host_args_handler.register_gui_callback(self.on_gui_callback3)
 
+        self.vuln_range_box_args_handler = ArgsHandler(args_list1=self.vuln_range_box_args)
+        self.vuln_range_box_args_handler.register_gui_callback(self.on_gui_callback4)
 
     def execute_non_gui_code(self):
         self.checkbox_args_handler.non_gui_method() # handle checbox args phase2
-        
 
     def execute_non_gui_code2(self, list):
         self.port_args_handler.non_gui_method()
@@ -95,10 +95,11 @@ class NetworkScanner(customtkinter.CTkFrame):
 
     def execute_non_gui_code3(self, list):
         self.host_args_handler.non_gui_method()
+        print("Executing non-gui code")
 
     def execute_non_gui_code4(self, list):
-        pass
-
+        self.vuln_range_box_args_handler.non_gui_method()  # Call the non_gui_method
+        print("Executing non-gui code")
     
         
 
@@ -113,8 +114,7 @@ class NetworkScanner(customtkinter.CTkFrame):
     def on_gui_callback3(self, data):
         self.host_options_args_list = data
         print("Received callback3 signal from non-GUI code:", data)
-        print("TYPE-> ", type(data))
-
+      
     def on_gui_callback4(self, data):
-        pass
-       
+        data = self.vuln_range_box_args
+        print("Received callback4 signal from non-GUI code:", data)
