@@ -14,7 +14,7 @@ from constants.net_scan_gui_const import (
 from constants.net_script_scan import net_script_scan_list
 
 class ExclusionsBox(customtkinter.CTkTabview):
-    def __init__(self, master, main_args=None, command=None):
+    def __init__(self, master, command=None):
         super().__init__(master)
 
         self.scrollable_frame_switches = []
@@ -39,7 +39,6 @@ class ExclusionsBox(customtkinter.CTkTabview):
         self.args_list1 = []
         self.args_list2 = []
         self.args_list3 = []
-        self.main_args = main_args if main_args is not None else []
         self.update_main_args()
 
             # TCP UDP OPTIONS
@@ -60,10 +59,6 @@ class ExclusionsBox(customtkinter.CTkTabview):
             # SERVICE SCAN
         self.service_options = list(scan_service_detection.keys())
         self.service_options_vals = list(scan_service_detection.values())
-        '''
-        LEFT OFF:
-        TODO - setup service args
-        '''
 
         self.combobox_1 = customtkinter.CTkComboBox(self.tab(PRANGE_2),
                                                     values=[PRANGE_2_VAL_NONE, self.service_options[0], self.service_options[1], self.service_options[2]], 
