@@ -37,39 +37,30 @@ class ScanIntensityBox(customtkinter.CTkFrame):
         
         self.slider_2 = customtkinter.CTkSlider(self, from_=0, to=9,number_of_steps=9)
         self.slider_2.grid(row=2, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+        self.slider_2.set(0)
         self.slider_2.bind("<B1-Motion>", lambda event: self.on_slider_move(self.slider_2.get()))
         self.aggression_label = customtkinter.CTkLabel(self, text="Aggression")
         self.aggression_label.grid(row=2, column=0, padx=(10, 10), pady=(1, 1), sticky="ns")
 
         self.slider_3 = customtkinter.CTkSlider(self, from_=0, to=9,number_of_steps=9)
         self.slider_3.grid(row=3, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+        self.slider_3.set(0)
         self.slider_3.bind("<B1-Motion>", lambda event: self.on_slider_move(self.slider_3.get()))
         self.evasion_label = customtkinter.CTkLabel(self, text="Evasion")
         self.evasion_label.grid(row=3, column=0, padx=(10, 10), pady=(1, 1), sticky="ns")
 
     def on_slider_move(self, value):
-        seg_var = self.seg_var.get()
         if value != self.previous_value:            #print("Slider value:", value)
             print("Slider value:", value)
             self.previous_value = value
 
     def show_present_silder(self, event=None):
         pass
-        '''self.current_selection = self.seg_var.get()
-        if self.current_selection == SCAN_1_INT:
-            print(SCAN_1_INT)
-            self.slider_1.configure(state=tkinter.NORMAL)
-            self.slider_2.configure(state=tkinter.DISABLED)
-            self.slider_3.configure(state=tkinter.DISABLED)
-        elif self.current_selection == SCAN_2_INT:
-            print(SCAN_2_INT)
-            self.slider_1.configure(state=tkinter.DISABLED)
-            self.slider_2.configure(state=tkinter.NORMAL)
-            self.slider_3.configure(state=tkinter.DISABLED)
-        elif self.current_selection == SCAN_3_INT:
-            print(SCAN_3_INT)
-            self.slider_1.configure(state=tkinter.DISABLED)
-            self.slider_2.configure(state=tkinter.DISABLED)
-            self.slider_3.configure(state=tkinter.NORMAL)'''
+       
+    '''
+    LEFT OFF
+    TODO redo this and add it's proper settings options objects
+    6/21/23
+    '''
 
     

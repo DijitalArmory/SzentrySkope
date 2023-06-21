@@ -2,13 +2,13 @@ import customtkinter
 import tkinter
 import threading
 import functools
-from data.net_scan_data import (udp_protocols, scan_service_detection)
+from data.net_scan_data import (udp_protocols, scan_service_detection, scan_os_detection)
 from constants.constants import (
     CORNER_RADIUS_0, WIDTH_250, NSEW, PADY_1, PADY_1, GRID_ROW_1, GRID_COL_2, 
      GRID_COL_0, GRID_ROW_2, GRID_COL_0, PADY_2, PADX_2, PADX_1, N
 )
 from constants.net_scan_gui_const import (
-    PRANGE_1, PRANGE_2, PRANGE_3, PRANGE_1_VAL_1, PRANGE_1_VAL_2, PRANGE_2_VAL_1, 
+    PRANGE_1, PRANGE_2, PRANGE_3, PRANGE_4, PRANGE_1_VAL_1, PRANGE_1_VAL_2, PRANGE_2_VAL_1, 
     PRANGE_2_VAL_2, PRANGE_2_VAL_3, PRANGE_2_VAL_NONE
     )
 from constants.net_script_scan import net_script_scan_list
@@ -29,16 +29,20 @@ class ExclusionsBox(customtkinter.CTkTabview):
         self.add(PRANGE_1)
         self.add(PRANGE_2)
         self.add(PRANGE_3)
+        self.add(PRANGE_4)
+        
         self.tab(PRANGE_1).grid_columnconfigure(
             0, weight=1)  # configure grid of individual tabs
         self.tab(PRANGE_2).grid_columnconfigure(0, weight=1)
         self.tab(PRANGE_3).grid_columnconfigure(0, weight=1)
+        self.tab(PRANGE_4).grid_columnconfigure(0, weight=1)
 
 
         self.command = command
         self.args_list1 = []
         self.args_list2 = []
         self.args_list3 = []
+        self.args_list4 = []
         self.update_main_args()
 
             # TCP UDP OPTIONS
@@ -60,23 +64,33 @@ class ExclusionsBox(customtkinter.CTkTabview):
         self.service_options = list(scan_service_detection.keys())
         self.service_options_vals = list(scan_service_detection.values())
 
-        self.combobox_1 = customtkinter.CTkComboBox(self.tab(PRANGE_2),
-                                                    values=[PRANGE_2_VAL_NONE, self.service_options[0], self.service_options[1], self.service_options[2]], 
+        self.combobox_services = customtkinter.CTkComboBox(self.tab(PRANGE_2),
+                                                    values=[PRANGE_2_VAL_NONE, self.service_options[0], self.service_options[1]], 
                                                     command=self.set_service_val)
-        self.combobox_1.grid(row=1, column=0, padx=20, pady=(20, 10))
+        self.combobox_services.grid(row=1, column=0, padx=20, pady=(20, 10))
 
+            # OS Options
+        self.os_options = list(scan_os_detection.keys())
+        self.os_options_vals = list(scan_os_detection.values())
+
+        self.combobox_os = customtkinter.CTkComboBox(self.tab(PRANGE_3),
+                                                    values=[PRANGE_2_VAL_NONE, self.os_options[0], self.os_options[1],  self.os_options[2]], 
+                                                    command=self.set_os_val)
+        self.combobox_os.grid(row=1, column=0, padx=20, pady=(20, 10))
+
+            # Create tab labels
         self.label_tab_2 = customtkinter.CTkLabel(
             self.tab(PRANGE_2), text="Select Service Scan Options")
         self.label_tab_2.grid(row=0, column=0, padx=20, pady=20)
 
         self.label_tab_3 = customtkinter.CTkLabel(
-            self.tab(PRANGE_3), text="Select Advanced Scan Options")
+            self.tab(PRANGE_4), text="Select AVulnerability Scanning Options")
         self.label_tab_3.grid(row=0, column=0, padx=20, pady=20)
 
 
             # scripts Scan Options
         self.scrollable_frame = customtkinter.CTkScrollableFrame(
-            self.tab(PRANGE_3), label_text="Scan Scripts")
+            self.tab(PRANGE_4), label_text="Scan Scripts")
         self.scrollable_frame.grid(row=1, column=0, sticky="nsew")
 
         # threaded execution 
@@ -149,14 +163,27 @@ class ExclusionsBox(customtkinter.CTkTabview):
         else:
             self.args_list2 = []
         self.update_main_args()
-        print(self.args_list1)
+        print(self.args_list2)
         print("MAIN ARGS-> ", self.main_args)
 
         # Print the updated args_list
         print(self.args_list2)
 
+    def set_os_val(self, selected_value):
+        if selected_value in self.os_options and self.os_options not in self.args_list4:
+            index = self.os_options.index(selected_value)
+            self.args_list4 = [self.os_options_vals[index]]
+        else:
+            self.args_list4 = []
+        self.update_main_args()
+        print(self.args_list4)
+        print("MAIN ARGS-> ", self.main_args)
+
+        # Print the updated args_list
+        print(self.args_list4)
+
     def update_main_args(self):
-        self.main_args = self.args_list1 + self.args_list2 + self.args_list3
+        self.main_args = self.args_list1 + self.args_list2 + self.args_list3 + self.args_list4
         print("MAIN ARGS-> ", self.main_args)
 
     

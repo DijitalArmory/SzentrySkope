@@ -40,12 +40,13 @@ scan_techniques_txt = [
 PRANGE_1 = "Protocol"
 PRANGE_1_VAL_1 = "TCP"
 PRANGE_1_VAL_2 = "UDP"
-PRANGE_2 = "Service"
+PRANGE_2 = "Services"
 PRANGE_2_VAL_NONE = "None"
 PRANGE_2_VAL_1 = "Services"
 PRANGE_2_VAL_2 = "Operating System"
 PRANGE_2_VAL_3 = "ALL"
-PRANGE_3 = "Vulns"
+PRANGE_3 = "Operating Systems"
+PRANGE_4 = "Vulns"
 
 # SERVICE/VERSION DETECTION
 sV = "Service Detection"# OS Detection

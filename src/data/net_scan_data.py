@@ -45,8 +45,15 @@ scan_technique_options = list(scan_techniques.values())
 
 scan_service_detection = {
     "Service Detection"             : "-sV", 
-    "Operating System Detection"    : "-O",
-    "Service and OS Detection"      : "-A"
+    "+Debug Info"                    : "-sV --version-trace",
+    "Intensity"                     : "-sV --version-intensity "
+}
+#########################################################################################
+
+scan_os_detection = {
+    "OS Detection"                  : "-O", 
+    "+Limited"                       : "-O osscan-limit", 
+    "+Aggressive"                    : "-O --osscan-guess"
 }
 #########################################################################################
 
@@ -94,3 +101,8 @@ nic_info = {
 nic_info_keys = list(nic_info.keys())
 nic_info_values = list(nic_info.values())
 #########################################################################################
+
+stealth_info = {
+    "Stealth"                        : "-T ", 
+
+}
